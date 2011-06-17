@@ -1,0 +1,26 @@
+# Test data
+
+### Authors
+Author(1):
+    id:            1
+    firstname:     Jo
+    lastname:      Nesbo
+
+Author(2):
+    id:            2
+    firstname:     Henning
+    lastname:      Mankell
+
+### Books
+Book(1):
+    title:         Fladdermusmannen
+    author:        1
+
+Book(2):
+    title:         Kackerlackorna
+    author:        1
+
+Book(3):
+    title:         Kinesen
+    author:        2
+    

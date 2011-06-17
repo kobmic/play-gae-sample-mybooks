@@ -1,0 +1,23 @@
+#{extends 'main.html' /}
+#{set title:'MyBooks' /}
+
+<div class="sub">
+<div class="additem"><a href="@{MyBooks.list()}">Show all</a> </div>
+
+#{form @MyBooks.list()}
+    <table>
+    <tr><td>Filter by Author</td>
+    <td><input type="text" name="author" id="author" value="${author}"/></td>
+    <td> Filter by Year</td>
+    <td><input type="text" name="year" id="year" value="${year}"/></td>
+    <td><input type="submit" value="Filter" /></td></tr>
+    </table>
+    
+#{/form} 
+</div>    
+    
+
+
+
+
+

@@ -1,0 +1,98 @@
+#{extends 'main.html' /}
+#{set title:Details /}
+ 
+<div class="sub">
+
+<div class="additem"><a href="@{MyBooks.add(book.id)}">Add to my books</a> | <a href="@{Books.edit(book.id)}"">Edit</a> </div>
+
+<h2>${book.authorAndTitle()}</h2>
+<h3>${book.subtitle}</h3>
+
+<div class="info">
+<table>
+<tr><td>URL:</td><td><a href="${book.url}" target="_blank">${book.shortUrl()}</a></td></tr>
+<tr><td>ISBN-10:</td><td>${book.isbn10}</td></tr>
+<tr><td>ISBN-13:</td><td>${book.isbn13}</td></tr>
+</table>
+</div>
+
+#{if book.ratings().size() > 0}
+  <div class="ratings">
+  <h3>Ratings</h3>
+        
+        #{list items:book.ratings(), as:'rating'}
+            <div class="rating-item">
+            <table><tr><td>
+                <div class="rating-stars" id="${"rating" + rating.id}"></div>
+                </td>
+                <td>
+                <div class="rating-metadata">
+                    <span class="rating-date"> ${String.format('%tF',rating.date)}</span>
+                    <span class="rating-author">by ${rating.user}</span>
+                </div>
+                </td>
+                <td> #{if rating.isDeletable(user)}
+                <a href="@{Books.deleteRating(book.id, rating.id)}"><img border="no" alt="remove" title="remove" src="/public/images/delete-icon.png"></a>
+                #{/if}
+                </td>
+                </tr>
+                <tr><td colspan="3">
+                <div class="rating-comment">
+                  ${rating.comment}
+                </div>
+                </td></tr>
+                </table>
+                      
+            </div>
+        #{/list}
+        
+</div>
+
+<script type="text/javascript">      
+  ${book.genRatingsJavascript()}
+</script>
+
+#{/if}
+
+<div class="new-rating">
+#{form @Books.postRating(book.id)}
+    
+    <h3>
+    Your Rating:<br>
+    </h3>
+    <div id="post-rating"></div>
+    <input type='hidden' name='rating' id='rating' value=''>
+    <p>
+        <label for="comment">Your comment: </label>
+        <textarea name="comment" id="comment"></textarea>
+    </p>
+    <p>
+        <input type="submit" value="Submit your rating" />
+    </p>
+#{/form}
+</div>
+
+<script type="text/javascript"> 
+  $('#post-rating').raty({
+    path: '/public/javascripts/img/',
+    onClick: function(score) {
+      $('#rating').val(score);
+    }
+    });
+</script>  
+
+<script type="text/javascript" charset="utf-8">
+    $(function() {         
+        // Expose the form 
+        $('form').click(function() { 
+            $('form').expose({api: true}).load(); 
+        }); 
+        
+        // If there is an error, focus to form
+        if($('form .error').size()) {
+            $('form').expose({api: true, loadSpeed: 0}).load(); 
+            $('form input').get(0).focus();
+        }
+    });
+</script>
+

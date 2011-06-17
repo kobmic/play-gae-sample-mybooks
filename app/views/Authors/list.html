@@ -1,0 +1,31 @@
+#{extends 'main.html' /}
+#{set title:'MyBooks' /}
+
+<div class="sub">
+
+<div class="additem"><a href="@{Authors.add()}">Add</a> </div>
+
+#{if authorCount > 0}
+    <div class="itemlist">
+        <h3>Authors (${authorCount})</h3>
+        
+    #{list authors, as:'author'}
+        <div class="author-item">
+            <a href="@{Authors.show(author.id)}">${author.toString()}</a>
+        </div>
+    #{/list}
+    #{if offset > 0}
+        <div class="pagination prev"><a href="@{Authors.list(prevOffset)}"><< Previous</a> </div>
+    #{/if}
+    #{if nextOffset > offset}
+        <div class="pagination next"><a href="@{Authors.list(nextOffset)}">Next >></a> </div>
+    #{/if}    
+    <div style="clear:both;"></div>
+    </div>
+    
+#{/if}
+#{else}
+No authors yet.
+#{/else}
+
+</div>

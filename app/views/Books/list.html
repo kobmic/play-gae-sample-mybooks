@@ -1,0 +1,41 @@
+#{extends 'main.html' /}
+#{set title:'MyBooks' /}
+
+<div class="sub">
+
+<div class="additem"><a href="@{Books.add()}"">Add</a> </div>
+
+
+#{if bookCount > 0}
+    <div class="itemlist">
+        <h3>Books (${bookCount})</h3>
+        
+    #{list books, as:'book'}
+        <div class="list-item">
+            <a href="@{Books.show(book.id)}">${book.authorAndTitle()}</a>
+            <br>
+            <span class="average">${book.ratings().size()} rating(s)</span>
+            <div class="rating-stars" id="${"rating" + book.id}"></div>
+            <script type="text/javascript">
+              $('#rating${book.id}').raty({ path: '/public/javascripts/img/', readOnly:  true, start: ${book.averageRating()} });
+            </script>            
+        </div>
+    #{/list}
+    
+    #{if offset > 0}
+        <div class="pagination prev"><a href="@{Books.list(prevOffset)}"><< Previous</a> </div>
+    #{/if}    
+    #{if nextOffset > offset}
+        <div class="pagination next"><a href="@{Books.list(nextOffset)}">Next >></a> </div>
+    #{/if}
+    <div style="clear:both;"></div>
+    </div>
+
+#{/if}
+#{else}
+No books yet.
+#{/else}
+
+</div>
+
+

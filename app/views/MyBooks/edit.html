@@ -1,0 +1,38 @@
+#{extends 'main.html' /}
+#{set title:'MyBooks' /}
+
+<div class="sub">
+<div class="additem"><a href="@{MyBooks.delete(info.id)}">Delete</a></div>
+
+<h3>Edit my record for '${book.authorAndTitle()}' </h3>
+
+<script type="text/javascript">
+    $(function() {
+       $("#endDate").monthpicker("${info.endDate()}", callback);
+    });
+    
+    function callback(data,$e) {
+      var year = data["year"];
+      var month = data["month"];
+      $("#endMonth").val(month);
+      $("#endYear").val(year);
+}
+</script>
+
+<div id="add-book-form">
+#{form @updateEntry()}
+    <input type="hidden" name="bookId" value="${book.id}"/>
+    Finished reading:<br><br>
+    <div class="MonthPicker" id="endDate" title="Example 1">Month Picker v2</div>
+    <input type="hidden" id="endMonth" name="endMonth" value="${info.endMonth}"/>
+    <input type="hidden" id="endYear" name="endYear" value="${info.endYear}"/>
+    <br>
+    I own this book
+    <input type="checkbox" name="own" #{if info.own} checked#{/if} />
+    <br><br>
+    <p>
+        <input type="submit" value="Update" />
+    </p>
+#{/form}
+</div>
+</div>

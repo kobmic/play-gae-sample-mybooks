@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>#{get 'title' /}</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <link rel="stylesheet" type="text/css" media="screen" href="@{'/public/stylesheets/main.css'}">
+        <link rel="stylesheet" type="text/css" media="screen" href="@{'/public/stylesheets/monthpicker.css'}">
+        
+        #{get 'moreStyles' /}
+        <link rel="shortcut icon" type="image/png" href="@{'/public/images/favicon.png'}">
+        <script src="@{'/public/javascripts/jquery-1.4.2.min.js'}" type="text/javascript" charset="utf-8"></script>
+        <script src="@{'/public/javascripts/jquery.raty.min.js'}" type="text/javascript" charset="utf-8"></script>
+        <script src="@{'/public/javascripts/jquery.megaselectlist.js'}" type="text/javascript" charset="utf-8"></script>
+        <script src="@{'/public/javascripts/monthpicker.min.js'}" type="text/javascript" charset="utf-8"></script>
+        
+        #{get 'moreScripts' /}
+    </head>
+    <body>
+    
+        
+    <div id="header">
+      <div id="header-info">
+        ${user} | <a href="@{Authentication.logout()}">Logout</a>
+      </div>  
+      <div id="title">
+       <h1>MyBooks</h1>
+       <a href="@{Application.index()}">My books</a> | <a href="@{Authors.list()}">List Authors</a> | <a href="@{Authors.add()}">Add Author</a> | <a href="@{Books.list()}">List Books</a> | <a href="@{Books.add()}">Add Book</a> 
+      </div>
+    </div>
+        
+        #{if flash.error}
+            <p class="error">${flash.error}</p>
+        #{/if}
+        #{if flash.success}
+            <p class="success">${flash.success}</p>
+        #{/if}
+    
+    <div id="main">
+        #{doLayout /}
+    </div>
+    
+    <p id="footer">
+            MyBooks is built with the 
+            <a href="http://www.playframework.org">play framework</a> &nbsp;&nbsp;&nbsp; MyBooks Author: Michael Kober
+        </p>
+        
+    </body>
+</html>

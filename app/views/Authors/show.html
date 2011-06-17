@@ -1,0 +1,26 @@
+#{extends 'main.html' /}
+#{set title:Details /}
+ 
+<h2>${author.toString()}</h2>
+
+#{if books.size() > 0}
+    <div class="itemlist">
+        <h3>Books</h3>
+        
+    #{list books, as:'book'}
+        <div class="list-item">
+            <a href="@{Books.show(book.id)}">${book.title()}</a>
+            <br>
+            <a id="small-url" href="${book.url}">${book.shortUrl()}</a>
+            <br>
+            <span class="average">${book.ratings().size()} rating(s)</span>
+            <div class="rating-stars" id="${"rating" + book.id}"></div>
+            <script type="text/javascript">
+              $('#rating${book.id}').raty({ path: '/public/javascripts/img/', readOnly:  true, start: ${book.averageRating()} });
+            </script>            
+        </div>
+    #{/list}
+    <div style="clear:both;"></div>
+    </div>
+
+#{/if}

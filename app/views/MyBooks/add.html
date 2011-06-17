@@ -1,0 +1,50 @@
+#{extends 'main.html' /}
+#{set title:'MyBooks' /}
+
+<h3>Add '${book.authorAndTitle()}' to my books</h3>
+
+<script type="text/javascript">
+    $(function() {
+       $("#endMonth").val(new Date().getMonth() + 1);
+       $("#endYear").val(new Date().getFullYear()); 
+       $("#endDate").monthpicker(callback);
+    });
+    
+    function callback(data,$e) {
+      var year = data["year"];
+      var month = data["month"];
+      $("#endMonth").val(month);
+      $("#endYear").val(year);
+}
+</script>
+
+        
+<div id="add-book-form">
+#{form @postEntry()}
+    <input type="hidden" name="bookId" value="${book.id}"/>
+    Finished reading:<br><br>
+    <div class="MonthPicker" id="endDate" title="Example 1">Month Picker v2</div>
+    <input type="hidden" id="endMonth" name="endMonth"/>
+    <input type="hidden" id="endYear" name="endYear"/>
+    <br>
+    I own this book
+    <input type="checkbox" name="own" />
+    <br><br>
+    <p>
+        <input type="submit" value="Update" />
+    </p>
+#{/form}
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+

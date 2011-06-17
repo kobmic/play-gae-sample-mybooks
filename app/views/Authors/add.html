@@ -1,0 +1,25 @@
+#{extends 'main.html' /}
+#{set title:'MyBooks' /}
+
+<h3>Add Author</h3>
+        
+<div id="add-author-form">
+#{form @postAuthor()}
+    
+    <p>
+     Firstname <input type="text" name="firstname" id="firstname"/>
+    </p>
+    <p>
+     Lastname <input type="text" name="lastname" id="lastname"/>
+    </p>
+    <p>
+        <input type="submit" value="Add" />
+    </p>
+#{/form}
+</div>
+
+
+
+
+
+
