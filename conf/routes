@@ -6,6 +6,7 @@
 GET     /                                       Application.index
 GET     /mybooks/list/?                         MyBooks.list
 GET     /mybooks/add/?                          MyBooks.add
+GET     /mybooks/top                            MyBooks.top
 
 
 # books

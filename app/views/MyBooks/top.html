@@ -1,0 +1,28 @@
+#{extends 'main.html' /}
+#{set title:'MyBooks' /}
+
+
+
+#{if authorSeq.size() > 0}
+    <div class="itemlist">
+        <h3>Toplist - authors by number of books</h3>
+        
+    #{list authorSeq, as:'info'}
+        <div>
+            <b>${info._1} - ${info._2}</b>
+                        
+        </div>
+    #{/list}
+    <div style="clear:both;"></div>
+    </div>
+
+#{/if}
+#{else}
+No books yet.
+#{/else}
+
+
+
+
+
+

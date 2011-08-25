@@ -59,6 +59,20 @@ object MyBooks extends Controller with Secure {
       Template(bookInfos, author, year,  totalCount, currentYearCount)
     }
 	
+	def top() = {
+      val bookInfos = getMyBooks()
+      
+      def authorCountAdder(authorsWithCount: Map[String, Int], bookInfo: RichBookInfo) = {
+        val newCount = authorsWithCount.get(bookInfo.book.authorname).getOrElse(0) + 1
+        authorsWithCount + (bookInfo.book.authorname -> newCount)
+      }
+      val authorMap = bookInfos.foldLeft(Map[String,Int]())(authorCountAdder)
+      val authorSeq = authorMap.toSeq.sortBy(_._2).filter(_._2 > 2).reverse
+      Template(authorSeq)
+    }
+	
+	
+	
 	def myBooksFiltered(author: String, year: String) = { 
 	  Action(list(author, year))
     }
