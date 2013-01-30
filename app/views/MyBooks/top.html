@@ -9,7 +9,7 @@
         
     #{list authorSeq, as:'info'}
         <div>
-            <b>${info._1} - ${info._2}</b>
+            <b><a style="text-decoration: none;color: black;" href="@{Authors.show(info._1._2)}">${info._1._1}</a> - ${info._2}</b>
                         
         </div>
     #{/list}

@@ -24,8 +24,17 @@ object Application extends Controller with Secure {
     }
 }
 object MyBooks extends Controller with Secure {
-	private def getOrCreateUserData() : UserData = {
-		if (!UserData.exists(connectedUser)) {
+  import java.util.concurrent.ConcurrentHashMap
+  val cache = new ConcurrentHashMap[JLong, UserData]()
+
+  def getCurrentUserData(): UserData = if (cache.contains(connectedUserId)) {
+      cache.get(connectedUserId)
+    } else {
+      getOrCreateUserData()
+    }
+
+  def getOrCreateUserData() : UserData = {
+    val userData  = if (!UserData.exists(connectedUser)) {
     		val data = new UserData(connectedUser)
     		data.insert()
     		data.get()
@@ -33,10 +42,12 @@ object MyBooks extends Controller with Secure {
     	} else {
     		UserData.getByUser(connectedUser)
     	}
+    cache.put(userData.id, userData)
+    userData
 	}
 	
 	private def getMyBooks() = {
-	  val userData = getOrCreateUserData()
+	  val userData = getCurrentUserData()
       userData.bookInfoList()
 	}
 	
@@ -53,20 +64,20 @@ object MyBooks extends Controller with Secure {
 	
 	def list(author: String, year: String) = {
       val bookInfos = getMyBooksFiltered(author, year)
-      val id = UserData.getUserDataId(connectedUser)
-      val currentYearCount = new java.text.SimpleDateFormat("yyyy").format(new java.util.Date()) + ": " + BookInfo.currentYearCount(id)
-      val totalCount = BookInfo.count(id)
+      val currentYearCount = new java.text.SimpleDateFormat("yyyy").format(new java.util.Date()) + ": " + BookInfo.currentYearCount(connectedUserId)
+      val totalCount = BookInfo.count(connectedUserId)
       Template(bookInfos, author, year,  totalCount, currentYearCount)
     }
 	
 	def top() = {
       val bookInfos = getMyBooks()
       
-      def authorCountAdder(authorsWithCount: Map[String, Int], bookInfo: RichBookInfo) = {
-        val newCount = authorsWithCount.get(bookInfo.book.authorname).getOrElse(0) + 1
-        authorsWithCount + (bookInfo.book.authorname -> newCount)
+      def authorCountAdder(authorsWithCount: Map[(String, JLong), Int], bookInfo: RichBookInfo) = {
+        val newCount = authorsWithCount.get((bookInfo.book.authorname, bookInfo.book.authorId)).getOrElse(0) + 1
+        authorsWithCount + ((bookInfo.book.authorname, bookInfo.book.authorId)  -> newCount)
       }
-      val authorMap = bookInfos.foldLeft(Map[String,Int]())(authorCountAdder)
+
+      val authorMap = bookInfos.foldLeft(Map[(String, JLong),Int]())(authorCountAdder)
       val authorSeq = authorMap.toSeq.sortBy(_._2).filter(_._2 > 2).reverse
       Template(authorSeq)
     }
@@ -78,7 +89,7 @@ object MyBooks extends Controller with Secure {
     }
     
     def add(bookId: JLong) = {
-    	val userData = getOrCreateUserData()
+    	val userData = getCurrentUserData()
     	val book = Book.getById(bookId)
     	Template(userData, book)
     }
@@ -98,7 +109,7 @@ object MyBooks extends Controller with Secure {
     }
     
     def postEntry(bookId: JLong, endMonth: String, endYear: String, own: Boolean) = {
-      val userData = getOrCreateUserData()
+      val userData = getCurrentUserData()
       
       if (BookInfo.exists(bookId, userData.id)) {
     	  flash.error("Entry exists already!")
@@ -111,7 +122,7 @@ object MyBooks extends Controller with Secure {
     }
     
     def updateEntry(bookId: JLong, endMonth: String, endYear: String, own: Boolean) = {
-      val userData = getOrCreateUserData()
+      val userData = getCurrentUserData()
       val bookInfo = BookInfo.getByBookIdAndUserDataId(bookId, userData.id)
       bookInfo.endMonth = endMonth
       bookInfo.endYear = endYear
@@ -262,12 +273,17 @@ trait Secure {
     	    Action(Authentication.login())
         } else {
         	renderArgs += "user" -> GAE.getUser().getEmail()
+          val userId = MyBooks.getOrCreateUserData().id
+          renderArgs += "userId" -> userId
         	Continue
         }
     }
     
     @Util
     def connectedUser = renderArgs.get("user").asInstanceOf[String]
+
+    @Util
+    def connectedUserId = renderArgs.get("userId").asInstanceOf[JLong]
     
 }
 

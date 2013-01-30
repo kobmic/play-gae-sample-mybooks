@@ -25,7 +25,14 @@ class BookInfo(var bookId: JLong,
   def endDate() = { 
 	  val sb = new StringBuilder  
 	  if ((endYear != null) && (endYear.length > 0)) sb.append(endYear)
-	  if ((endMonth != null) && (endMonth.length > 0)) sb.append("-").append(endMonth)
+	  if ((endMonth != null) && (endMonth.length > 0)) {
+      if (endMonth.length == 1) {
+        sb.append("-0").append(endMonth)
+      } else {
+        sb.append("-0").append(endMonth)
+      }
+
+    }
 	 sb.toString
   }
 }
