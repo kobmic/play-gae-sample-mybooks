@@ -29,7 +29,7 @@ class BookInfo(var bookId: JLong,
       if (endMonth.length == 1) {
         sb.append("-0").append(endMonth)
       } else {
-        sb.append("-0").append(endMonth)
+        sb.append("-").append(endMonth)
       }
 
     }
